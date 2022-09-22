@@ -4,16 +4,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type loginParam struct {
+	Account  string `form:"account" binding:"required"`
+	Password string `form:"password" binding:"required"`
+}
+
 func Login(c *gin.Context) {
-	// nickname := c.Query("nickname")
-	// tel := c.Query("tel")
-	nickname := c.Query("nickname")
-	tel := c.PostForm("tel")
-	// ctx.String(http.StatusOK, "这是后台登录页面")
+	var person loginParam
+	if err := c.ShouldBind(&person); err != nil {
+		// c.String(500, fmt.Sprint(err))
+		c.JSON(200, gin.H{
+			"success": true,
+			"code":    500,
+			"message": err,
+		})
+		return
+	}
+	// c.JSON(200, fmt.Sprintf("%#v", person))
 	c.JSON(200, gin.H{
 		"success": true,
 		"code":    200,
-		"test":    nickname,
-		"tel":     tel,
+		"test":    person,
 	})
+	//登录
+	// nickname := c.Query("nickname")
+	// tel := c.PostForm("tel")
+	// c.JSON(200, gin.H{
+	// 	"success": true,
+	// 	"code":    200,
+	// 	"test":    nickname,
+	// 	"tel":     tel,
+	// })
 }
